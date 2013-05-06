@@ -1,0 +1,31 @@
+#zhammer tab file
+#Notes: 
+#number:	Each device needs a unique number.
+#name:	 	Each device can optionally be identified by a friendly name
+#type:		The type of device to create
+#			Valid types: swap, zfscache, zfslog, fs
+#size:		the size to create the device.
+#			Valid Suffixes:
+#			k,K,KiB,KB	= x 1024
+#			m,M,MiB,MB	= x 1024KiB
+#			g,G,GiB,GB	= x 1024GiB
+#
+#options:	Options are dependent on type.
+#
+#DEFAULTS:	The defaults entry is MANDATORY and must be FIRST.
+#			It sets up important defaults for the zhammer application
+#			to use when parsing entries.
+#			the default entry accepts a special option, devices, which determines
+#			the number of zram devices to create when loading zram
+#			
+#			Any entry except number can be replaced with a - to assume the default value
+#number	name		type		size	options
+-		DEFAULTS 	swap		512M	pri=32767,devices=16,zpool=rebirth
+#0		zfscache0	zfscache	192MiB	
+#1		zfscache1	zfscache	192MiB	noauto
+2		-			-			192MiB
+3		-			-			192MiB	pri=32767,swappiness=100
+4		-			-			-		pri=100,noauto
+#5		!mine		zfslog		-		
+
+
