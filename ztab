@@ -23,9 +23,9 @@
 -		DEFAULTS 	swap		512M	pri=32767,devices=16,zpool=rebirth
 #0		zfscache0	zfscache	192MiB	
 #1		zfscache1	zfscache	192MiB	noauto
-2		-			-			192MiB
-3		-			-			192MiB	pri=32767,swappiness=100
-4		-			-			-		pri=100,noauto
+#2		-			-			192MiB
+#3		-			-			192MiB	pri=32767,swappiness=100
+#4		-			-			-		pri=100,noauto
 #5		!mine		zfslog		-		
 
 
