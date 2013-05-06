@@ -343,9 +343,11 @@ class zfscache(zfs):
             return
         if self._is_healthy():
             self.run_command("zpool add %s cache /dev/zram%s" %(self._get_pool(), self.number) )
-        pass
     def _offline(self):
-        pass
+        if self._get_pool() is None:
+            return
+        if self._is_healthy():
+            self.run_command("zpool remove %s /dev/zram%s" %(self._get_pool(), self.number) )
     def _is_healthy(self):
         health = self.run_command("zpool status -x %s" %self._get_pool())
         if ("pool '%s' is healthy" %self._get_pool()) in health:
