@@ -222,10 +222,27 @@ class ztab_entry(object):
         return size
 
     def offline(self, process_all=False, process_type=None):
-        print ("Offline not implemented yet")
-        self._offline();
-        self.reset()
+        #print ("Offline not implemented yet")
+        can_offline = False
         
+        if process_all:
+            if self.valid_options.has_key("noauto"):
+                pass
+            elif process_type is None:
+                can_offline = True
+            else:
+                can_offline = process_type == self.entry_type
+        else:
+            can_offline = True
+
+        if can_offline:
+            if VERBOSE:
+                print "Offlining: %s" %(self)
+            self._offline();
+            self.reset()
+        else:
+            if VERBOSE:
+                print("Unable to ofline %s") %(self)
     def reset(self):
         try:
             reset = open("/sys/block/zram%d/reset" %(int(self.number)), "w")
@@ -233,10 +250,12 @@ class ztab_entry(object):
             reset.close()
         except:
             pass
+
     def _online(self): # Override this
         pass
     def _offline(self):
         pass
+
     def run_command(self, cmd):
         if VERBOSE > 0: print(cmd)
         try:
@@ -319,14 +338,36 @@ class zfs(ztab_entry):
     my_known_options = set(['zpool'])
 
 class zfscache(zfs):
-    pass
+    def _online(self):
+        if self._get_pool() is None:
+            return
+        if self._is_healthy():
+            self.run_command("zpool add %s cache /dev/zram%d" %(self._get_pool(), self.number) )
+        pass
+    def _offline(self):
+        pass
+    def _is_healthy(self):
+        health = self.run_command("zpool status -x %s" %self._get_pool())
+        if ("pool '%d' is healthy" %self._get_pool()) in health:
+            return True
+        return False
+    def _get_pool(self):
+        try:
+            return self.valid_options['zpool']
+        except:
+            return None
 
 class zfslog(zfs):
-    pass
+    def _online(self):
+        print("Cowardly refusing to online zfs log.")
+    def _offline(self):
+        print("Cowardly refusing to offline zfs log.")
 
 class fs(ztab_entry):
-    mount_point = None
-    pass
+    def _online(self):
+        print("fs module not yet implemented")
+    def _offline(self):
+        print("fs module not yet implemented")
 
 ztab_entry_type = {'swap': swap,
                    'zfscache': zfscache,
