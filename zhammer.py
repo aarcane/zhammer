@@ -348,8 +348,12 @@ class zfscache(zfs):
         pass
     def _is_healthy(self):
         health = self.run_command("zpool status -x %s" %self._get_pool())
-        if ("pool '%d' is healthy" %self._get_pool()) in health:
+        if ("pool '%s' is healthy" %self._get_pool()) in health:
+            if VERBOSE > 0:
+                print ("Pool is Healthy")
             return True
+        if VERBOSE > 0:
+            print ("Pool is not Healthy")
         return False
     def _get_pool(self):
         try:
