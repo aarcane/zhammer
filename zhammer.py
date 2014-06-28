@@ -29,7 +29,7 @@ __version__ = 0.1
 __date__ = '2013-05-04'
 __updated__ = '2013-05-04'
 
-DEBUG = 1
+DEBUG = 0
 TESTRUN = 0
 PROFILE = 0
 
@@ -212,13 +212,16 @@ class ztab_entry(object):
                     modif=mod
                     mult = 1024*1024*1024
                     break
-        print("size1: %s" %size)
+        if VERBOSE:
+            print("size1: %s" %size)
         size = size.replace(modif,"")
-        print("size2: %s" %size)
+        if VERBOSE:
+            print("size2: %s" %size)
         if not size.isdigit():
             raise ztab_entry_exception("Invalid Size Specification: %s" % self.size)
-        size = int(size) * mult
-        print("size3: %d" %size)
+        size = (int(size) * mult) + 1
+        if VERBOSE:
+            print("size3: %d" %size)
         return size
 
     def offline(self, process_all=False, process_type=None):
